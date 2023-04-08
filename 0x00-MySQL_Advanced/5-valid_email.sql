@@ -3,7 +3,7 @@ DELIMITER $ ;
 CREATE
 DEFINER=`root`@`localhost`
 TRIGGER reset_valid_email
-AFTER UPDATE ON users
+BEFORE UPDATE ON users
 FOR EACH ROW
 BEGIN
   IF NEW.email != OLD.email THEN
