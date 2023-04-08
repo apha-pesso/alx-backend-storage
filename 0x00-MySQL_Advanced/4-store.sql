@@ -1,5 +1,7 @@
--- Trigger to decrease quantity
-CREATE TRIGGER decrease_qty AFTER INSERT ON orders
+-- Create Trigger to decrease quantity
+CREATE
+DEFINER=`root`@`localhost`
+TRIGGER decrease_qty AFTER INSERT ON orders
 FOR EACH ROW
 BEGIN
   UPDATE items SET quantity = quantity - NEW.number
