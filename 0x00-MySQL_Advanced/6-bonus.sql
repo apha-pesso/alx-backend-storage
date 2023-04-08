@@ -11,6 +11,6 @@ BEGIN
 	IF project_name NOT IN (SELECT name FROM projects) THEN
 	INSERT INTO projects (name) VALUES (project_name);
 	INSERT INTO corrections (user_id, project_id, score)
-       		VALUES (in_user_id, project_id, in_score);
+       		VALUES (user_id, project_id, score);
 END;
 $
