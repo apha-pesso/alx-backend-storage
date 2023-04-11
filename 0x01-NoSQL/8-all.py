@@ -3,6 +3,7 @@
 
 
 def list_all(mongo_collection):
+    '''List all'''
     result = []
 
     cur = db.mongo_collection.find()
