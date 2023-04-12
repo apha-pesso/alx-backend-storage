@@ -12,11 +12,24 @@ def count_calls(method: Callable) -> Callable:
     @wraps(method)
     def count_wrapper(*args, **kwargs):
         """Count wrapper"""
-        wrapped_method = method(*args, **kwargs)
         key = method.__qualname__
+        wrapped_method = method(*args, **kwargs)
         args[0]._redis.incr(key)
         return wrapped_method
     return count_wrapper
+
+
+def call_history(method: Callable) -> Callable:
+    """Store history of inputs and outputs for a particular function"""
+    @wraps(method)
+    def history_wrapper(*args, **kwargs):
+        """History Wrapper"""
+        key = method.__qualname__
+        wrapped_func = method(*args, **kwargs)
+        inputs = args[0]._redis.rpush("{}:inputs".format(key), str(args[1:]))
+        outputs = args[0]._redis.rpush("{}:outputs".format(key), str(wrapped_func))
+        return wrapped_func
+    return history_wrapper
 
 
 class Cache():
@@ -28,6 +41,7 @@ class Cache():
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Method to store data"""
         key = str(uuid4())
