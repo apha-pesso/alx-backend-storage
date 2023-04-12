@@ -12,10 +12,10 @@ def count_calls(method: Callable) -> Callable:
     @wraps(method)
     def count_wrapper(*args, **kwargs):
         """Count wrapper"""
-        func = method(*args, **kwargs)
+        wrapped_method = method(*args, **kwargs)
         key = method.__qualname__
         args[0]._redis.incr(key)
-        return func
+        return wrapped_method
     return count_wrapper
 
 class Cache():
