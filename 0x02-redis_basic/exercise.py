@@ -27,7 +27,8 @@ def call_history(method: Callable) -> Callable:
         key = method.__qualname__
         wrapped_func = method(*args, **kwargs)
         inputs = args[0]._redis.rpush("{}:inputs".format(key), str(args[1:]))
-        outputs = args[0]._redis.rpush("{}:outputs".format(key), str(wrapped_func))
+        outputs = args[0]._redis.rpush(
+            "{}:outputs".format(key), str(wrapped_func))
         return wrapped_func
     return history_wrapper
 
