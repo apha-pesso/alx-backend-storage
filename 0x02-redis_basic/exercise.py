@@ -1,10 +1,24 @@
 #!/usr/bin/env python3
 """Basic Redis"""
 
+from functools import wraps
 import redis
 from typing import Callable, Optional, Union
 from uuid import uuid4
 
+
+def count_calls(method: Callable) -> Callable:
+    """Return number of times the cache methods are called"""
+    @wraps(method)
+    def count_wrapper(*args, **kwargs):
+        """Count wrapper"""
+        func = method(*args, **kwargs)
+        key = method.__qualname__
+        # self._redis.incr(key)
+        args[0]._redis.incr(key)
+        # return self._redis.get(key)
+        return func
+    return count_wrapper
 
 class Cache():
     """Cache class"""
@@ -14,6 +28,7 @@ class Cache():
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Method to store data"""
         key = str(uuid4())
