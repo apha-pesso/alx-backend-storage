@@ -23,3 +23,4 @@ if __name__ == '__main__':
     \tmethod PATCH: {}\n\
     \tmethod DELETE: {}\n{} status check'
           .format(log, get, post, put, patch, delete, status_check)
+          )
